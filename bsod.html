@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0078d7">
+<title>:(</title>
+<meta name="robots" content="noindex">
+<style>
+  :root{
+    --bsod-blue:#0078d7;
+    --qr-size:min(15vw, 17vh);
+    --ui:"Segoe UI","Microsoft YaHei","微软雅黑","PingFang SC","Hiragino Sans GB","Helvetica Neue",Arial,sans-serif;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+
+  html,body{height:100%;overflow:hidden;background:var(--bsod-blue);}
+
+  body{
+    color:#fff;
+    font-family:var(--ui);
+    -webkit-font-smoothing:antialiased;
+    cursor:none;
+    user-select:none;
+  }
+
+  .screen{
+    position:fixed;
+    inset:0;
+    background:var(--bsod-blue);
+    overflow:hidden;
+  }
+
+  /* ---------- 左上文字区 ---------- */
+  .left{
+    position:absolute;
+    left:8.6vw;
+    top:11.1vh;
+    right:40vw;
+  }
+
+  .face{
+    font-family:var(--ui);
+    font-size:clamp(40px, 8.6vw, 6000px);
+    font-weight:300;
+    line-height:1;
+    letter-spacing:-.045em;
+    margin-bottom:clamp(20px, 4.8vh, 600px);
+  }
+
+  .msg p{
+    font-size:clamp(12px, 1.26vw, 900px);
+    font-weight:300;
+    line-height:1.62;
+    letter-spacing:.012em;
+  }
+
+  .msg p + p{margin-top:.5em;}
+
+  .pct{
+    margin-top:clamp(36px, 8.4vh, 800px);
+    font-size:clamp(12px, 1.26vw, 900px);
+    font-weight:300;
+    line-height:1.5;
+    letter-spacing:.012em;
+  }
+
+  /* ---------- 右下：二维码 + 三行右对齐小字 ---------- */
+  .qrwrap{
+    position:absolute;
+    right:6.4vw;
+    bottom:7.4vh;
+    display:flex;
+    align-items:flex-end;
+    gap:clamp(10px, 1.35vw, 900px);
+  }
+
+  .qr{
+    width:var(--qr-size);
+    height:var(--qr-size);
+    background:#fff;
+    padding:calc(var(--qr-size) * .055);
+    flex:0 0 auto;
+    display:block;
+    image-rendering:pixelated;
+    image-rendering:crisp-edges;
+  }
+
+  .qrtext{
+    text-align:right;
+    max-width:min(23.2vw, 480px);
+    padding-bottom:calc(var(--qr-size) * .02);
+  }
+
+  .qrtext p{
+    font-size:clamp(9px, .98vw, 700px);
+    font-weight:300;
+    line-height:1.82;
+    letter-spacing:.006em;
+    word-break:break-word;
+  }
+
+  .qrtext p + p{margin-top:.34em;}
+</style>
+</head>
+<body>
+
+  <div class="screen">
+
+    <div class="left">
+      <div class="face">:(</div>
+
+      <div class="msg">
+        <p>你的电脑遇到问题，需要重新启动。</p>
+        <p>我们只收集某些错误信息，然后为你重新启动。</p>
+      </div>
+
+      <div class="pct" id="pct">0% 完成</div>
+    </div>
+
+    <div class="qrwrap">
+      <div class="qr" id="qrbox"></div>
+      <div class="qrtext">
+        <p>有关此问题的详细信息和可能的解决方法，<br>请访问 https://www.windows.com/stopcode</p>
+        <p>如果致电支持人员，请向他们提供以下信息：</p>
+        <p>终止代码: CRITICAL_PROCESS_DIED</p>
+      </div>
+    </div>
+
+  </div>
+
+<script>
+(function(){
+  var pct = document.getElementById('pct');
+  if(!pct) return;
+
+  var params = new URLSearchParams(location.search);
+
+  // 截图 / 演示需要固定进度时使用 ?static=1
+  if(params.get('static') === '1'){
+    pct.textContent = '0% 完成';
+    return;
+  }
+
+  var n = 0;
+  function tick(){
+    if(n < 3){
+      n += 1;
+      pct.textContent = n + '% 完成';
+      setTimeout(tick, 1100);
+    }else if(n < 9){
+      n += 1;
+      pct.textContent = n + '% 完成';
+      // 越往后卡得越久，模拟"卡住"
+      setTimeout(tick, 9000 + Math.random() * 14000);
+    }
+  }
+
+  setTimeout(tick, 2200);
+})();
+</script>
+</body>
+</html>
